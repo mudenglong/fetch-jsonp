@@ -14,6 +14,7 @@
   'use strict';
 
   var defaultOptions = {
+    cache: false,
     timeout: 5000,
     jsonpCallback: 'callback',
     jsonpCallbackFunction: null
@@ -69,12 +70,15 @@
 
         clearFunction(callbackFunction);
       };
-
-      // Check if the user set their own params, and if not add a ? to start a list of params
-      url += url.indexOf('?') === -1 ? '?' : '&';
-
       var jsonpScript = document.createElement('script');
-      jsonpScript.setAttribute('src', '' + url + jsonpCallback + '=' + callbackFunction);
+
+      if (options.cache || defaultOptions.cache){
+        jsonpScript.setAttribute('src', `${url}`);
+      }else{
+        // Check if the user set their own params, and if not add a ? to start a list of params
+        url += url.indexOf('?') === -1 ? '?' : '&';
+        jsonpScript.setAttribute('src', '' + url + jsonpCallback + '=' + callbackFunction);
+      }
       if (options.charset) {
         jsonpScript.setAttribute('charset', options.charset);
       }

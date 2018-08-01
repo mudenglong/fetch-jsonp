@@ -1,4 +1,6 @@
 const defaultOptions = {
+  // url 是否携带?XXX 内容
+  cache: false,
   timeout: 5000,
   jsonpCallback: 'callback',
   jsonpCallbackFunction: null,
@@ -51,11 +53,16 @@ function fetchJsonp(_url, options = {}) {
       clearFunction(callbackFunction);
     };
 
-    // Check if the user set their own params, and if not add a ? to start a list of params
-    url += (url.indexOf('?') === -1) ? '?' : '&';
 
     const jsonpScript = document.createElement('script');
-    jsonpScript.setAttribute('src', `${url}${jsonpCallback}=${callbackFunction}`);
+    if (options.cache || defaultOptions.cache){
+      jsonpScript.setAttribute('src', `${url}`);
+    }else{
+
+      // Check if the user set their own params, and if not add a ? to start a list of params
+      url += (url.indexOf('?') === -1) ? '?' : '&';
+      jsonpScript.setAttribute('src', `${url}${jsonpCallback}=${callbackFunction}`);
+    }
     if (options.charset) {
       jsonpScript.setAttribute('charset', options.charset);
     }
